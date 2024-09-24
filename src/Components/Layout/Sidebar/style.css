@@ -33,6 +33,10 @@
   position: relative;
   transition: 0.3s linear;
 }
+.sideLink:hover span,
+.sideLink.active span {
+  color: #fff;
+}
 
 .sidebar-li {
   margin: 20px 0;
@@ -40,7 +44,7 @@
 
 .sideLink:hover,
 .sideLink.active {
-  color: #fff;
+  color: #ffffff;
   background: var(--primaryColor);
 }
 

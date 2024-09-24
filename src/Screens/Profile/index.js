@@ -65,15 +65,21 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-lg-6">
+                  <div className="col-lg-12">
                     <div className="row mb-4">
-                      <div className="col-lg-6 mb-3">
+                      <div className="col-lg-3 mb-3">
                         <h4 className="secondaryLabel">Full Name</h4>
                         <p className="secondaryText">{userData.name}</p>
                       </div>
-                      <div className="col-lg-6 mb-3">
+                      <div className="col-lg-9 mb-3">
                         <h4 className="secondaryLabel">Discripction</h4>
-                        <p className="secondaryText">{userData.description}</p>
+                        <p
+                          className="secondaryText"
+                          dangerouslySetInnerHTML={{
+                            __html: userData.description,
+                          }}
+                        ></p>
+
                       </div>
                       <div className="col-lg-6 mb-3">
                         <h4 className="secondaryLabel">Email</h4>
