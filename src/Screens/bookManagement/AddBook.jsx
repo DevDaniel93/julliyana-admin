@@ -15,7 +15,7 @@ export const AddBook = () => {
   const [success, setsuccess] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    cover: ""
+    cover: "",
   });
   const [BookCategories, setBookCategories] = useState();
 
@@ -24,7 +24,7 @@ export const AddBook = () => {
       const respo = await getEntity("categories");
       const myCategories = respo.data.map((item) => ({
         id: item.id,
-        name: item.title
+        name: item.title,
       }));
       setBookCategories(myCategories);
       console.log("respo", myCategories);
@@ -33,16 +33,16 @@ export const AddBook = () => {
   const Booktype = [
     {
       key: "0",
-      name: "eBook"
+      name: "eBook",
     },
     {
       key: "1",
-      name: "AudioBook"
+      name: "AudioBook",
     },
     {
       key: "2",
-      name: "Both"
-    }
+      name: "Both",
+    },
   ];
 
   const handleChange = (event) => {
@@ -52,12 +52,12 @@ export const AddBook = () => {
         value == "out of stock" ? false : value == "available" ? true : "";
       setFormData((prevData) => ({
         ...prevData,
-        [name]: val
+        [name]: val,
       }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -69,7 +69,7 @@ export const AddBook = () => {
       const fileName = file;
       setFormData((prevData) => ({
         ...prevData,
-        [name]: fileName
+        [name]: fileName,
       }));
     }
   };
@@ -91,7 +91,6 @@ export const AddBook = () => {
         setsuccess(true);
         setmodalText(response.message);
         setShowModal(true);
-       
       } else {
         setsuccess(false);
         setmodalText(response.message);
@@ -106,9 +105,9 @@ export const AddBook = () => {
       console.error("Error in adding book:", error);
     } finally {
       document.querySelector(".loaderBox").classList.add("d-none");
-    setTimeout(() => {
-      navigate("/book-management");
-    }, 1000);
+      setTimeout(() => {
+        navigate("/book-management");
+      }, 1000);
     }
   };
   console.log("formdata", formData);
@@ -174,7 +173,7 @@ export const AddBook = () => {
                           onChange={handleChange}
                         />
                       </div>
-                      <div className="col-md-6 mb-4">
+                      {/* <div className="col-md-6 mb-4">
                         <CustomInput
                           label="Enter Audiobook Duration"
                           required
@@ -187,7 +186,7 @@ export const AddBook = () => {
                           value={formData.audiobook_duration}
                           onChange={handleChange}
                         />
-                      </div>
+                      </div> */}
                       <div className="col-md-6 mb-4">
                         <SelectBox
                           selectClass="mainInput"
@@ -202,11 +201,11 @@ export const AddBook = () => {
                       </div>
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="eBookprice"
+                          label="E-Book Price"
                           required
                           id="info"
                           type="number"
-                          placeholder="eBookprice"
+                          placeholder="EBook Price"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="eBookprice"
@@ -216,11 +215,11 @@ export const AddBook = () => {
                       </div>
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="audioBookprice"
+                          label="Audio Book Price"
                           required
                           id="info"
                           type="number"
-                          placeholder="audioBookprice"
+                          placeholder="AudioBook Price"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="audioBookprice"
@@ -258,11 +257,11 @@ export const AddBook = () => {
                       </div>
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="audiotrailer"
+                          label="Audio Trailer"
                           required
                           id="resume"
                           type="file"
-                          placeholder="audiotrailer"
+                          placeholder="Audiotrailer"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="audiotrailer"
@@ -325,11 +324,11 @@ export const AddBook = () => {
                       </div>{" "}
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="kdp Link"
+                          label="Kdp Link"
                           required
                           id="kdp_link"
                           type="url"
-                          placeholder="Enter kdp link"
+                          placeholder="Enter Kdp Link"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="kdp_link"
@@ -339,11 +338,11 @@ export const AddBook = () => {
                       </div>{" "}
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="hardcover link"
+                          label="Hardcover Link"
                           required
                           id="hardcover_link"
                           type="url"
-                          placeholder="Enter hardcover link"
+                          placeholder="Enter Hardcover Link"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="hardcover_link"
@@ -353,11 +352,11 @@ export const AddBook = () => {
                       </div>{" "}
                       <div className="col-md-6 mb-4">
                         <CustomInput
-                          label="paperback link"
+                          label="Paperback Link"
                           required
                           id="paperback_linkk"
                           type="url"
-                          placeholder="paperback link"
+                          placeholder="Paperback Link"
                           labelClass="mainLabel"
                           inputClass="mainInput"
                           name="paperback_link"
@@ -373,6 +372,7 @@ export const AddBook = () => {
                               name="description"
                               className="form-control shadow border-0"
                               id="description"
+                              placeholder="Enter Description"
                               cols="30"
                               rows="10"
                               value={formData.description}

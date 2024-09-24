@@ -53,9 +53,13 @@ export const AddPolicies = () => {
       if (response?.status === true) {
         navigate("/policies-management");
       } else {
+        document.querySelector(".loaderBox").classList.remove("d-none");
+
         // Handle error or show notification
       }
     } catch (error) {
+      document.querySelector(".loaderBox").classList.remove("d-none");
+
       console.error("Error in adding policy:", error);
     }
   };
@@ -82,7 +86,7 @@ export const AddPolicies = () => {
                 <div className="row">
                   <div className="col-lg-12">
                     <div className="row">
-                      <div className="col-md-6 mb-4">
+                      <div className="col-md-12 mb-4">
                         <CustomInput
                           label="Title"
                           required
@@ -97,7 +101,7 @@ export const AddPolicies = () => {
                         />
                       </div>
 
-                      <div className="col-md-6 mb-4">
+                      <div className="col-md-12  mb-4">
                         <div className="inputWrapper">
                           <div className="form-controls">
                             <label htmlFor="description">Description</label>

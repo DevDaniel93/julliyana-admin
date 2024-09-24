@@ -30,6 +30,7 @@ import {
 import { ordersManagement } from "../../Config/Data";
 
 import "./style.css";
+import { TermsAndConditionDetails } from "./TermAndConditionDetail";
 
 export const TermsAndConditionManagement = () => {
   const [data, setData] = useState([]);
@@ -40,6 +41,7 @@ export const TermsAndConditionManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [inputValue, setInputValue] = useState("");
+  const [reload, setReload] = useState(false);
 
   const [books, setBooklists] = useState([]);
   const [policies, setPolicieslists] = useState([]);
@@ -55,12 +57,12 @@ export const TermsAndConditionManagement = () => {
   };
 
   const booklist = async () => {
-    document.querySelector(".loaderBox").classList.remove("d-none");
+    document.querySelector(".loaderBox")?.classList.remove("d-none");
     try {
       const response = await Getbookslist();
       console.log("response", response);
 
-      document.querySelector(".loaderBox").classList.add("d-none");
+      document.querySelector(".loaderBox")?.classList.add("d-none");
       setBooklists(response?.data);
     } catch (error) {
       console.error("Error in logging in:", error);
@@ -70,12 +72,12 @@ export const TermsAndConditionManagement = () => {
   };
 
   const policiesList = async () => {
-    document.querySelector(".loaderBox").classList.remove("d-none");
+    document.querySelector(".loaderBox")?.classList.remove("d-none");
     try {
       const response = await Getterms();
       console.log("terms", response);
 
-      document.querySelector(".loaderBox").classList.add("d-none");
+      document.querySelector(".loaderBox")?.classList.add("d-none");
       setPolicieslists(response?.data);
       setData(response?.data);
     } catch (error) {
@@ -86,13 +88,13 @@ export const TermsAndConditionManagement = () => {
   };
 
   const policydelete = async (id) => {
-    document.querySelector(".loaderBox").classList.remove("d-none");
+    document.querySelector(".loaderBox")?.classList.remove("d-none");
     try {
       const response = await GettermsDelete(id);
       console.log("response", response);
 
       if (response?.status == true) {
-        document.querySelector(".loaderBox").classList.add("d-none");
+        document.querySelector(".loaderBox")?.classList.add("d-none");
         policiesList();
       }
     } catch (error) {
@@ -110,9 +112,10 @@ export const TermsAndConditionManagement = () => {
   }, []);
   useEffect(() => {
     policiesList();
+  }, [reload]);
+  useEffect(() => {
+    policiesList();
   }, []);
-  console.log("books", books);
-  console.log("Policies", policies);
 
   const inActive = () => {
     setShowModal(false);
@@ -167,7 +170,7 @@ export const TermsAndConditionManagement = () => {
       key: "policies_title",
       title: "Title"
     },
-   
+
     {
       key: "action  ",
       title: "action  "
@@ -182,35 +185,33 @@ export const TermsAndConditionManagement = () => {
             <div className="col-12">
               <div className="dashCard">
                 <div className="row mb-3 justify-content-between">
-                  <div className="col-md-6 mb-2">
-                    <h2 className="mainTitle">Terms And Condition</h2>
-                  </div>
-                  <div className="col-md-12 mb-2">
-                    <div className="addUser">
-                      <CustomButton
-                        text="Add Terms And Condition"
-                        variant="primaryButton"
-                        onClick={hanldeRoute}
-                      />
+
+                  {policies.length === 0 &&
+                    <div className="col-md-12 mb-2">
+                      <div className="addUser">
+                        <CustomButton
+                          text="Add Terms And Condition"
+                          variant="primaryButton"
+                          onClick={hanldeRoute}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  }
                 </div>
-                <div className="row mb-3">
+                {policies.length !== 0 &&
+                  <TermsAndConditionDetails id={policies[0]?.id} reload={reload} setReload={setReload} />
+                }
+                {/* <div className="row mb-3">
                   <div className="col-12">
                     <CustomTable headers={maleHeaders}>
                       <tbody>
-                        {/* {currentItems?.map((item, index) => ( */}
+
                         {policies?.map((item, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
-                            {/* <td>{item?.title} </td> */}
-                            {/* <td className="text-capitalize">{item?.title}</td> */}
-                            {/* <td>{item?.pages ? `$ ${item?.pages}` : `$0`}</td> */}
-                            <td>{item?.title}</td>
-                            {/* <td>{item?.terms}</td> */}
 
-                            {/* <td>{item?.audiobook_duration}</td> */}
-                            {/* <td className={item.status == 1 ? 'greenColor' : "redColor"}>{item.status == 1 ? 'Active' : "Inactive"}</td> */}
+                            <td>{item?.title}</td>
+
                             <td>
                               <Dropdown className="tableDropdown">
                                 <Dropdown.Toggle
@@ -224,7 +225,7 @@ export const TermsAndConditionManagement = () => {
                                   className="tableDropdownMenu"
                                 >
                                   <Link
-                                    // to={`/orders-management/order-details/${item?.id}`}
+
                                     to={`/terms-condition-management/terms-condition-details/${item?.id}`}
                                     className="tableAction"
                                   >
@@ -271,10 +272,10 @@ export const TermsAndConditionManagement = () => {
                       onPageChange={handlePageChange}
                     />
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                </div> */}
+              </div >
+            </div >
+          </div >
 
           <CustomModal
             show={showModal}
@@ -309,8 +310,8 @@ export const TermsAndConditionManagement = () => {
             success
             heading="Marked as Active"
           />
-        </div>
-      </DashboardLayout>
+        </div >
+      </DashboardLayout >
     </>
   );
 };

@@ -108,7 +108,7 @@ export const BookManagement = () => {
     { key: "Pages", title: "Pages" },
     { key: "Language", title: "Language" },
     { key: "Types", title: "Types" },
-    { key: "Audiobook Duration", title: "Audiobook Duration" },
+    // { key: "Audiobook Duration", title: "Audiobook Duration" },
     { key: "action", title: "Action" },
   ];
   const togglePin = async (id) => {
@@ -176,7 +176,7 @@ export const BookManagement = () => {
                             <td>{item?.pages ? `${item?.pages}` : `0`}</td>
                             <td>{item?.lang}</td>
                             <td>{item?.type}</td>
-                            <td>{item?.audiobook_duration}</td>
+                            {/* <td>{item?.audiobook_duration}</td> */}
                             <td>
                               <Dropdown
                                 className="tableDropdown"

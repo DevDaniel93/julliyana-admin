@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Dropdown } from "react-bootstrap";
+import { Button, Card, Col, Dropdown, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisV,
@@ -40,7 +40,6 @@ export const NoteList = () => {
   const [modalText, setmodalText] = useState("");
   const [success, setsuccess] = useState(false);
 
-  console.log("data", data);
   const navigate = useNavigate();
 
   const handlePageChange = (pageNumber) => {
@@ -50,7 +49,7 @@ export const NoteList = () => {
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
-  console.log("data", data);
+
   const filterData = data?.filter((item) =>
     item?.title?.toLowerCase().includes(inputValue.toLowerCase())
   );
@@ -147,7 +146,7 @@ export const NoteList = () => {
     navigate("/story-management/add-story");
   };
 
-  console.log("currentItems", currentItems);
+
   return (
     <>
       <DashboardLayout>
@@ -177,7 +176,85 @@ export const NoteList = () => {
                     </div>
                   </div>
                 </div>
-                <div className="row mb-3">
+
+                <Row className="g-4 ">
+                  {data?.map((item, index) => {
+                    return (
+                      <Col md={4} key={index}>
+                        <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: '100%' }}>
+                          <Card.Body>
+                            <Card.Text>
+                              {item?.content?.split(" ").slice(0, 20).join(" ")}
+                            </Card.Text>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                              <div>
+                                {item.likes}<FontAwesomeIcon style={{ marginLeft: "10px" }} icon={faThumbsUp} />
+                              </div>
+                              <div>
+                                {item.comments}{" "}{" "}
+                                <FontAwesomeIcon style={{ marginLeft: "10px" }} icon={faCommenting} />{" "}
+                              </div>
+                              <div>
+                                <Dropdown
+                                  className="tableDropdown"
+                                  show={item.id === dropdown}
+                                  onToggle={() =>
+                                    setdropdown(dropdown === 0 ? item.id : 0)
+                                  }
+                                >
+                                  <Dropdown.Toggle
+                                    variant="transparent"
+                                    className="notButton classicToggle"
+                                  >
+                                    <FontAwesomeIcon icon={faEllipsisV} />
+                                  </Dropdown.Toggle>
+                                  <Dropdown.Menu
+                                    align="end"
+                                    className="tableDropdownMenu"
+                                  >
+                                    <Link
+                                      to={`/story-management/story-detail/${item?.id}`}
+                                      className="tableAction"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faEye}
+                                        className="tableActionIcon"
+                                      />
+                                      View
+                                    </Link>
+                                    <Link
+                                      to={`/story-management/edit-story/${item?.id}`}
+                                      className="tableAction"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        className="tableActionIcon"
+                                      />
+                                      Edit
+                                    </Link>
+                                    <Link
+                                      onClick={() => DeleteNotes(item.id)}
+                                      className="tableAction"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faTrash}
+                                        className="tableActionIcon"
+                                      />
+                                      Delete
+                                    </Link>
+                                  </Dropdown.Menu>
+                                </Dropdown>
+                              </div>
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
+
+
+                {/* <div className="row mb-3">
                   <div className="col-12">
                     <CustomTable headers={maleHeaders}>
                       <tbody>
@@ -193,7 +270,7 @@ export const NoteList = () => {
                             <td>
                               {item.likes} <FontAwesomeIcon icon={faThumbsUp} />{" "}
                             </td>
-                            {/* <td className={item.status == 1 ? 'greenColor' : "redColor"}>{item.status == 1 ? 'Active' : "Inactive"}</td> */}
+                          
                             <td>
                               {item.comments}{" "}
                               <FontAwesomeIcon icon={faCommenting} />{" "}
@@ -260,7 +337,7 @@ export const NoteList = () => {
                       onPageChange={handlePageChange}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

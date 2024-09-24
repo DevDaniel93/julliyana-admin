@@ -10,7 +10,8 @@ import {
   GetchaptersDelete,
   Getpagedetail,
   pageDelete,
-  getpolicedetail
+  getpolicedetail,
+  GetpolicyDelete,
 } from "../../api";
 import Accordion from "react-bootstrap/Accordion";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,22 +19,30 @@ import { SelectBox } from "../../Components/CustomSelect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CustomInput from "../../Components/CustomInput";
 
-import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faEllipsisV,
+  faEye,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { ordersManagement } from "../../Config/Data";
+import { Dropdown } from "react-bootstrap";
 
-export const PoliciesDetails = () => {
+export const PoliciesDetails = (props) => {
+  const { id, reload, setReload } = props;
   const Bookstatus = [
     {
       key: "0",
-      name: "Free"
+      name: "Free",
     },
     {
       key: "1",
-      name: "Paid"
-    }
+      name: "Paid",
+    },
   ];
-  const { id } = useParams();
+  // const { id } = useParams();
+
   const [chapterdata, setChapterData] = useState([]);
 
   const base_url = process.env.REACT_APP_BASE_URL;
@@ -87,7 +96,7 @@ export const PoliciesDetails = () => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -97,153 +106,201 @@ export const PoliciesDetails = () => {
 
   const editDetailData = () => {};
   const handleEdit = (e) => {};
+  const policydelete = async (id) => {
+    document.querySelector(".loaderBox").classList.remove("d-none");
+    try {
+      const response = await GetpolicyDelete(id);
+      console.log("response", response);
+      console.log({ id });
+
+      if (response?.status == true) {
+        document.querySelector(".loaderBox").classList.add("d-none");
+        setReload(!reload);
+        // policiesList();
+      }
+    } catch (error) {
+      console.error("Error in logging in:", error);
+
+      // toastAlert(error, ALERT_TYPES.ERROR);
+    }
+  };
 
   return (
     <>
-      <DashboardLayout>
-        <div className="dashCard mb-4">
-          <div className="row mb-3">
-            <div className="col-12 mb-2">
-              <h2 className="mainTitle">
-                <BackButton />
-                Privacy Policy Details
-              </h2>
-            </div>
+      {/* <DashboardLayout> */}
+      <div className=" mb-4">
+        <div className="row mb-3">
+          <div className="col-12 mb-2">
+            <h2 className="mainTitle">
+              {/* <BackButton /> */}
+              Privacy Policy Details
+            </h2>
           </div>
-          <div className="row mb-3">
-            <div className="col-12">
-              <div className="row">
-                <div className="col-md-12 mb-4">
-                  <p className="secondaryText">Title</p>
-                  <p>{Policydetail.title}</p>
-                </div>
+        </div>
+        <div className="row mb-3">
+          <div className="col-12">
+            <div className="row">
+              <div className="col-md-11 mb-4">
+                <p className="secondaryText">Title</p>
+                <p>{Policydetail.title}</p>
+              </div>
+              <div className="col">
+                <Dropdown className="tableDropdown">
+                  <Dropdown.Toggle
+                    variant="transparent"
+                    className="notButton classicToggle"
+                  >
+                    <FontAwesomeIcon icon={faEllipsisV} />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu align="end" className="tableDropdownMenu">
+                    <Link
+                      to={`/policies-management/edit-policies/${Policydetail?.id}`}
+                      className="tableAction"
+                    >
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="tableActionIcon"
+                      />
+                      Edit
+                    </Link>
 
-                <div className="col-md-12 mb-4">
-                  <p className="secondaryText">Description</p>
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: Policydetail.description
-                    }}
-                  ></p>
-                </div>
+                    <button
+                      type="button"
+                      className="bg-transparent border-0 ps-lg-3 pt-1"
+                      onClick={() => {
+                        policydelete(Policydetail?.id);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon> Delete
+                    </button>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+
+              <div className="col-md-12 mb-4">
+                <p className="secondaryText">Description</p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: Policydetail.description,
+                  }}
+                ></p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <CustomModal
-          show={showModal}
-          close={() => {
-            setShowModal(false);
-          }}
-          action={inActive}
-          heading="Are you sure you want to mark this user as inactive?"
+      <CustomModal
+        show={showModal}
+        close={() => {
+          setShowModal(false);
+        }}
+        action={inActive}
+        heading="Are you sure you want to mark this user as inactive?"
+      />
+      <CustomModal
+        show={showModal2}
+        close={() => {
+          setShowModal2(false);
+        }}
+        success
+        heading="Marked as Inactive"
+      />
+
+      <CustomModal
+        show={showModal3}
+        close={() => {
+          setShowModal3(false);
+        }}
+        action={Active}
+        heading="Are you sure you want to mark this user as Active?"
+      />
+      <CustomModal
+        show={showModal4}
+        close={() => {
+          setShowModal4(false);
+        }}
+        success
+        heading="Marked as Active"
+      />
+
+      <CustomModal
+        show={editModal}
+        close={() => {
+          setEditModal(false);
+        }}
+        heading="Edit Book Chapters"
+      >
+        <CustomInput
+          label="Chapter Title"
+          required
+          id="title"
+          type="text"
+          placeholder="Enter Chapter Title"
+          labelClass="mainLabel"
+          inputClass="mainInput"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
         />
-        <CustomModal
-          show={showModal2}
-          close={() => {
-            setShowModal2(false);
-          }}
-          success
-          heading="Marked as Inactive"
+
+        <CustomInput
+          label="Chapter price"
+          required
+          id="title"
+          type="text"
+          placeholder="Enter Chapter price"
+          labelClass="mainLabel"
+          inputClass="mainInput"
+          name="price"
+          value={formData?.price}
+          onChange={handleChange}
         />
 
-        <CustomModal
-          show={showModal3}
-          close={() => {
-            setShowModal3(false);
-          }}
-          action={Active}
-          heading="Are you sure you want to mark this user as Active?"
-        />
-        <CustomModal
-          show={showModal4}
-          close={() => {
-            setShowModal4(false);
-          }}
-          success
-          heading="Marked as Active"
+        <CustomInput
+          label="Chapter Audio"
+          required
+          id="audio_file"
+          type="file"
+          placeholder="Upload Chapter Audio"
+          labelClass="mainLabel"
+          inputClass="mainInput"
+          name="audio_file"
+          onChange={handleChange}
         />
 
-        <CustomModal
-          show={editModal}
-          close={() => {
-            setEditModal(false);
-          }}
-          heading="Edit Book Chapters"
-        >
-          <CustomInput
-            label="Chapter Title"
-            required
-            id="title"
-            type="text"
-            placeholder="Enter Chapter Title"
-            labelClass="mainLabel"
-            inputClass="mainInput"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-
-          <CustomInput
-            label="Chapter price"
-            required
-            id="title"
-            type="text"
-            placeholder="Enter Chapter price"
-            labelClass="mainLabel"
-            inputClass="mainInput"
-            name="price"
-            value={formData?.price}
-            onChange={handleChange}
-          />
-
-          <CustomInput
-            label="Chapter Audio"
-            required
-            id="audio_file"
-            type="file"
-            placeholder="Upload Chapter Audio"
-            labelClass="mainLabel"
-            inputClass="mainInput"
-            name="audio_file"
-            onChange={handleChange}
-          />
-
-        
-
-          <CustomButton
-            variant="primaryButton"
-            text="Edit"
-            type="button"
-            onClick={handleEdit}
-          />
-        </CustomModal>
-
-        <CustomModal
-          show={pageModal}
-          close={() => {
-            setpageModal(false);
-          }}
-          heading="Page Content"
-        >
-          <div className="col-md-6 mb-4">
-            <p className="secondaryText"> Content </p>
-            <p>{pagesdetail?.content}</p>
-          </div>
-
-          {/* <CustomButton variant='primaryButton' text='Page Content ' type='button' onClick={handleEdit} /> */}
-        </CustomModal>
-
-        <CustomModal
-          show={showModal}
-          close={() => {
-            setShowModal(false);
-          }}
-          success
-          heading="Chapter Added Successfully."
+        <CustomButton
+          variant="primaryButton"
+          text="Edit"
+          type="button"
+          onClick={handleEdit}
         />
-      </DashboardLayout>
+      </CustomModal>
+
+      <CustomModal
+        show={pageModal}
+        close={() => {
+          setpageModal(false);
+        }}
+        heading="Page Content"
+      >
+        <div className="col-md-6 mb-4">
+          <p className="secondaryText"> Content </p>
+          <p>{pagesdetail?.content}</p>
+        </div>
+
+        {/* <CustomButton variant='primaryButton' text='Page Content ' type='button' onClick={handleEdit} /> */}
+      </CustomModal>
+
+      <CustomModal
+        show={showModal}
+        close={() => {
+          setShowModal(false);
+        }}
+        success
+        heading="Chapter Added Successfully."
+      />
+      {/* </DashboardLayout> */}
     </>
   );
 };
